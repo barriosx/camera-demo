@@ -1,0 +1,8 @@
+.camera-lens-container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  .camera-lens {
+      object-fit: cover;
+  }
+}
