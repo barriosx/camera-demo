@@ -1,0 +1,10 @@
+<div class="camera-lens-container">
+  <video
+  class="camera-lens"
+  height="100%"
+  width="100%"
+  #video
+  autoplay
+  (loadedmetadata)="onCameraMetadataLoaded($event)"
+  ></video>
+</div>
