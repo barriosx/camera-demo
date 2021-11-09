@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { facingModeUserLandscapeConfig, landscapeMobileUserConfig } from 'src/app/constants/device-configs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CameraService {
-
+  private cameraRoll = new BehaviorSubject<any[]>([]);
+  cameraRoll$ = this.cameraRoll.asObservable();
   constructor() { }
 
-  async getCameraFeed() {
-    // check getUserMedia is not supported by the browser that has the app open
-    const supported = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+  async getCameraFeed(supported: boolean) {
     if (!supported) {
       // either camera is disabled, feature unsupported, or instance of localstream already exists
       return null;
@@ -41,21 +42,7 @@ export class CameraService {
           audio: false,
         }
       }
-      return {
-        video: {
-          width: {
-            min: 1280,
-            ideal: 1920,
-            max: 2560,
-          },
-          height: {
-            min: 720,
-            ideal: 1080,
-            max: 1440,
-          },
-        },
-        audio: false,
-      }
+      return landscapeMobileUserConfig
     } else {
       const facing = devices.length > 1 ? 'environment' : 'user';
       if (window.innerHeight > window.innerWidth) {
@@ -77,24 +64,12 @@ export class CameraService {
         }
       } 
       else {
-        return {
-          video: {
-            facingMode: { ideal: facing },
-            width: {
-              min: 1280,
-              ideal: 1920,
-              max: 2560,
-            },
-            height: {
-              min: 720,
-              ideal: 1080,
-              max: 1440,
-            },
-          },
-          audio: false,
-        }
+        return facingModeUserLandscapeConfig
       }
     }
   }
-
+  addPhotoToCameraRoll(imgSrc: any) {
+    const newPhotos = [...this.cameraRoll.value, imgSrc]
+    this.cameraRoll.next(newPhotos);
+  }
 }
