@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { facingModeUserLandscapeConfig, landscapeMobileUserConfig } from 'src/app/constants/device-configs';
+import { facingModeEnvironmentLandscapeConfig, facingModeEnvironmentPortraitConfig, facingModeUserLandscapeConfig, facingModeUserPortraitConfig, landscapeMobileUserConfig, portraitMobileUserConfig } from 'src/app/constants/device-configs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,40 +32,32 @@ export class CameraService {
   }
   loadSupportedConstraints(supports: MediaTrackSupportedConstraints, devices: MediaDeviceInfo[]): MediaStreamConstraints {
     if (!supports["facingMode"]) {
+      // default to user camera
       if (window.innerHeight > window.innerWidth) {
         // Return portrait constraints
-        return {
-          video: {
-            width: { min: 270, max: 270 },
-            height: { min: 480, max: 480},
-          },
-          audio: false,
-        }
+        return portraitMobileUserConfig;
       }
-      return landscapeMobileUserConfig
+      return landscapeMobileUserConfig;
     } else {
       const facing = devices.length > 1 ? 'environment' : 'user';
-      if (window.innerHeight > window.innerWidth) {
-        return {
-          video: {
-            facingMode: { ideal: facing },
-            height: { 
-              min: 480, 
-              ideal:720,
-              max: 768 
-            },
-            width: { 
-              min: 640, 
-              ideal: 960,
-              max: 1024
-            },
-          },
-          audio: false,
-        }
-      } 
-      else {
-        return facingModeUserLandscapeConfig
+      switch (facing) {
+        case 'user':
+          if (window.innerHeight > window.innerWidth) {
+            return facingModeUserPortraitConfig;
+          } 
+          else {
+            return facingModeUserLandscapeConfig;
+          }
+        case 'environment':
+        default:
+          if (window.innerHeight > window.innerWidth) {
+            return facingModeEnvironmentPortraitConfig;
+          } 
+          else {
+            return facingModeEnvironmentLandscapeConfig;
+          }
       }
+      
     }
   }
   addPhotoToCameraRoll(imgSrc: any) {
