@@ -22,4 +22,9 @@ describe('CameraLensComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('should load camera meta data onload', () => {
+    component.onCameraMetadataLoaded({target: { videoHeight: 100, videoWidth: 100}});
+    expect(component.cameraHeight).toBe(100);
+    expect(component.cameraWidth).toBe(100);
+  });
 });

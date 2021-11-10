@@ -16,7 +16,7 @@ import { CameraRollComponent } from './components/camera/camera-roll/camera-roll
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

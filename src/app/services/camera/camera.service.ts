@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { facingModeEnvironmentLandscapeConfig, facingModeEnvironmentPortraitConfig, facingModeUserLandscapeConfig, facingModeUserPortraitConfig, landscapeMobileUserConfig, portraitMobileUserConfig } from 'src/app/constants/device-configs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CameraService {
-
+  private cameraRoll = new BehaviorSubject<any[]>([]);
+  cameraRoll$ = this.cameraRoll.asObservable();
   constructor() { }
 
-  async getCameraFeed() {
-    // check getUserMedia is not supported by the browser that has the app open
-    const supported = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+  async getCameraFeed(supported: boolean) {
     if (!supported) {
       // either camera is disabled, feature unsupported, or instance of localstream already exists
       return null;
@@ -31,70 +32,36 @@ export class CameraService {
   }
   loadSupportedConstraints(supports: MediaTrackSupportedConstraints, devices: MediaDeviceInfo[]): MediaStreamConstraints {
     if (!supports["facingMode"]) {
+      // default to user camera
       if (window.innerHeight > window.innerWidth) {
         // Return portrait constraints
-        return {
-          video: {
-            width: { min: 270, max: 270 },
-            height: { min: 480, max: 480},
-          },
-          audio: false,
-        }
+        return portraitMobileUserConfig;
       }
-      return {
-        video: {
-          width: {
-            min: 1280,
-            ideal: 1920,
-            max: 2560,
-          },
-          height: {
-            min: 720,
-            ideal: 1080,
-            max: 1440,
-          },
-        },
-        audio: false,
-      }
+      return landscapeMobileUserConfig;
     } else {
       const facing = devices.length > 1 ? 'environment' : 'user';
-      if (window.innerHeight > window.innerWidth) {
-        return {
-          video: {
-            facingMode: { ideal: facing },
-            height: { 
-              min: 480, 
-              ideal:720,
-              max: 768 
-            },
-            width: { 
-              min: 640, 
-              ideal: 960,
-              max: 1024
-            },
-          },
-          audio: false,
-        }
-      } 
-      else {
-        return {
-          video: {
-            facingMode: { ideal: facing },
-            width: {
-              min: 1280,
-              ideal: 1920,
-              max: 2560,
-            },
-            height: {
-              min: 720,
-              ideal: 1080,
-              max: 1440,
-            },
-          },
-          audio: false,
-        }
+      switch (facing) {
+        case 'user':
+          if (window.innerHeight > window.innerWidth) {
+            return facingModeUserPortraitConfig;
+          } 
+          else {
+            return facingModeUserLandscapeConfig;
+          }
+        case 'environment':
+        default:
+          if (window.innerHeight > window.innerWidth) {
+            return facingModeEnvironmentPortraitConfig;
+          } 
+          else {
+            return facingModeEnvironmentLandscapeConfig;
+          }
       }
+      
     }
   }
-
+  addPhotoToCameraRoll(imgSrc: any) {
+    const newPhotos = [...this.cameraRoll.value, imgSrc]
+    this.cameraRoll.next(newPhotos);
+  }
 }
