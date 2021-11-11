@@ -35,6 +35,18 @@
               transform: scale(1.05);
               transition: transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
           }   
+        @include sm {
+          &:hover, &:focus,&:active {
+            transform: scale(1.05);
+            transition: transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+          }   
+        }
+        @include xs {
+          &:hover, &:focus, &:active {
+            transform: scale(1.05);
+            transition: transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+          }   
+        }
       }
   }
   .camera-gallery {
