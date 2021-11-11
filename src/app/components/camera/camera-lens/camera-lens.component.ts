@@ -1,17 +1,20 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { concatMap, debounceTime, tap } from 'rxjs/operators';
+import { cameraAnimations } from 'src/app/constants/animations';
 import { CameraService } from 'src/app/services/camera/camera.service';
 
 @Component({
   selector: 'app-camera-lens',
   templateUrl: './camera-lens.component.html',
+  animations: cameraAnimations
 })
 export class CameraLensComponent implements OnInit {
   @ViewChild('video', { static: true }) video!: ElementRef;
   @ViewChild('canvas', { static: true }) canvas!: ElementRef;
   cameraRoll: any[] = [];
   cameraStream: MediaStream | null = null;
+  showingCamera = true;
   isCameraDisabled = false;
   cameraHeight = 0;
   cameraWidth = 0;
@@ -21,15 +24,17 @@ export class CameraLensComponent implements OnInit {
   ngOnInit(): void {
     // check getUserMedia is not supported by the browser that has the app open
     const supported = navigator.mediaDevices && (typeof navigator.mediaDevices.getUserMedia === 'function');
-    this.cameraService.getCameraFeed(supported).then(stream => {
-      console.log(stream);
-      this.cameraStream = stream;
-      this.video.nativeElement.srcObject = stream;
+    this.cameraService.showCameraRoll$
+    .subscribe(showRoll => {
+      this.showingCamera = !showRoll;
+      if (!showRoll && !this.isCameraDisabledOrInUse()) {
+        this.cameraService.getCameraFeed(supported).then(stream => {
+          console.log(stream);
+          this.cameraStream = stream;
+          this.video.nativeElement.srcObject = stream;
+        });
+      }
     })
-    .catch(err => {
-      console.error(err);
-      this.isCameraDisabled = true;
-    });
     this.cameraService.cameraRoll$.subscribe(roll => {
       this.cameraRoll = roll.map(img => img);
     });
@@ -56,5 +61,25 @@ export class CameraLensComponent implements OnInit {
     const src64 = this.canvas.nativeElement.toDataURL();
 
     return of(src64)
+  }
+  async turnOffVideoTracks() {
+    try {
+      for await (const track of this.cameraStream?.getVideoTracks() ?? []) {
+        track.stop()
+      }
+    } catch (error) {
+      // Couldn't stop the camera bc MediaStream isnt set
+      // We get here if camera could not load in time
+      console.error(`closeCamera() failed because localStream: MediaStream === undefined`);
+    }
+  }
+  goToRoll() {
+    this.turnOffVideoTracks().then(() => {
+      this.cameraStream = null;
+      this.cameraService.changeView();
+    });
+  }
+  isCameraDisabledOrInUse():boolean {
+    return this.isCameraDisabled || this.cameraStream != undefined; 
   }
 }

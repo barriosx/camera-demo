@@ -7,7 +7,10 @@ import { facingModeEnvironmentLandscapeConfig, facingModeEnvironmentPortraitConf
 })
 export class CameraService {
   private cameraRoll = new BehaviorSubject<any[]>([]);
+  private showCameraRoll: BehaviorSubject<boolean> = new BehaviorSubject<boolean> (false);
   cameraRoll$ = this.cameraRoll.asObservable();
+  showCameraRoll$ = this.showCameraRoll.asObservable();
+
   constructor() { }
 
   async getCameraFeed(supported: boolean) {
@@ -63,5 +66,8 @@ export class CameraService {
   addPhotoToCameraRoll(imgSrc: any) {
     const newPhotos = [...this.cameraRoll.value, imgSrc]
     this.cameraRoll.next(newPhotos);
+  }
+  changeView() {
+    this.showCameraRoll.next(!this.showCameraRoll.value);
   }
 }

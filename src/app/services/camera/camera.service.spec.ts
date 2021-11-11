@@ -67,4 +67,11 @@ describe('CameraService', () => {
     })
     service.addPhotoToCameraRoll('imgsrc');
   });
+  it('should be able to toggle views between camera and roll', done => {
+    service.changeView();
+    service.showCameraRoll$.subscribe(show => {
+      expect(show).toBeTrue();
+      done();
+    });
+  });
 });
