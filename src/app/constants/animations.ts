@@ -30,3 +30,14 @@ export const cameraAnimations = [
     ])
   ])
 ]
+
+export const cameraRollAnimations = [
+  trigger('roll', [
+    transition(':enter', [
+      style({ opacity: 0 }), animate('500ms cubic-bezier(0.16,1,0.3,1)', style({ opacity: 1 }))
+    ]),
+    transition(':leave', [
+      style({ opacity: 1 }), animate('300ms 500ms ease-out', style({ opacity: 0 }))
+    ])
+  ]),
+]
