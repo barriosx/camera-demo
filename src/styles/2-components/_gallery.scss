@@ -1,0 +1,129 @@
+.camera-captured-pane {
+  overflow-y: hidden;
+  text-align: center;
+  background: #1a1a1a;
+  height: 100%;
+  .captured-photo-wrapper {
+      position: relative;
+      height: calc(100% - 5rem);
+      .captured-photo {
+          width: 100%;
+          padding-top: 56.25%;
+          text-align: center;
+          img {
+              position: absolute;
+              inset: 0;
+              object-fit: contain;
+              object-position: center;
+              // width: 100%; // Helps with cropping the raw image upon displaying to screen
+              max-width: 100%;
+              height: 100%;
+              max-height: 100%;
+              margin: 0 auto;
+              &.mobile {
+
+              }
+              &.landscape {
+                  
+              }
+          }
+          [class^='carousel-'] {
+              cursor: pointer;
+              position: absolute;
+              background-color: white;
+              outline: lightgray 0.5px solid;
+              color: grey;
+              height: 50px;
+              width: 50px;
+              bottom: calc((100% / 2) - 50px);
+              font-weight: 600;
+              font-size: 25px;
+              display: flex;
+              justify-content: center;
+              align-content: flex-start;
+              flex-direction: column;
+          }
+          .carousel-left-btn {
+              left: 1%;
+          }
+          .carousel-right-btn {
+              right: 1%;
+          }
+          .testing {
+              position: absolute;
+              background: red;
+          }
+      }
+      .empty-message {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        align-content: center;
+        height: 100%;
+        color: white;
+        font-family: sans-serif;
+        padding: 0rem 1rem;
+        h2 {
+          font-size: 1.2rem;
+          font-weight: bold;
+          margin-bottom: 1rem;
+        }
+      }
+  }
+  .roll {
+      position: absolute;
+      bottom: 0;
+      background: #2a2a2a;
+      height: 5rem;
+      width: 100%;
+      display: flex;
+      > * {
+          margin-right: 0.05rem;
+      }
+      .photo-wrapper {
+          height: 5rem;
+          width: 7rem;
+          position: relative;
+          cursor: pointer;
+          overflow: hidden;
+          .photo {
+              padding-top: 100%;
+              img {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  inset: 0;
+              }
+          }
+          &.active {
+              margin: 0 1rem;
+              transition: margin 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+          }
+      }
+      @include sm {
+          .photo-wrapper {
+              width: 3.5rem;
+          }
+          .photo {
+              img {
+                  object-fit: contain;
+              }
+          }
+          &.active {
+              margin: 0 0.5rem;
+          }
+      }
+      @include xs {
+          .photo-wrapper {
+              width: 4rem;
+          }
+          .photo {
+              img {
+                  object-fit: contain;
+              }
+          }
+      }
+  }
+}
