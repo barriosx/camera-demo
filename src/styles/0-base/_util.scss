@@ -1,0 +1,11 @@
+$grow: 36px;
+@mixin xs {
+    @media (max-width: 359px) {
+        @content;
+    }
+ }
+@mixin sm {
+    @media (max-width: 467px) {
+        @content;
+    }
+ }

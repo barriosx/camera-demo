@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CameraRollComponent } from './camera-roll.component';
 
@@ -8,7 +9,8 @@ describe('CameraRollComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CameraRollComponent ]
+      declarations: [ CameraRollComponent ],
+      imports: [ BrowserAnimationsModule ]
     })
     .compileComponents();
   });

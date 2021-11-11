@@ -1,1 +1,7 @@
-<p>camera-roll works!</p>
+<div class="camera-roll" *ngIf="show" @roll>
+  <div class="top-row">
+      <div class="go-back" (click)="goToCamera()">&#10094;</div>
+  </div>
+  <div class="content">
+  </div>
+</div>
