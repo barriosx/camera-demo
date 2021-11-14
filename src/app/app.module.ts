@@ -8,6 +8,7 @@ import { CameraComponent } from './components/camera/camera.component';
 import { CameraLensComponent } from './components/camera/camera-lens/camera-lens.component';
 import { CameraRollComponent } from './components/camera/camera-roll/camera-roll.component';
 import { GalleryComponent } from './components/gallery/gallery.component';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { GalleryComponent } from './components/gallery/gallery.component';
     CameraComponent,
     CameraLensComponent,
     CameraRollComponent,
-    GalleryComponent
+    GalleryComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
