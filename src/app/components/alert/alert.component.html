@@ -1,1 +1,6 @@
-<p>alert works!</p>
+<div class="alert-overlay" *ngIf="(alert$ | async) as alert" @alert>
+  <div class="alert">
+    <h2>{{alert.title}}</h2>
+    <p>{{alert.message}}</p>
+  </div>
+</div>
