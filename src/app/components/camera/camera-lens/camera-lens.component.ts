@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { concatMap, debounceTime, tap } from 'rxjs/operators';
 import { cameraAnimations } from 'src/app/constants/animations';
+import { AlertService } from 'src/app/services/alert/alert.service';
 import { CameraService } from 'src/app/services/camera/camera.service';
 
 @Component({
@@ -19,7 +20,7 @@ export class CameraLensComponent implements OnInit {
   cameraHeight = 0;
   cameraWidth = 0;
 
-  constructor(private cameraService: CameraService) { }
+  constructor(private cameraService: CameraService, private alertService: AlertService) { }
 
   ngOnInit(): void {
     // check getUserMedia is not supported by the browser that has the app open
@@ -32,6 +33,10 @@ export class CameraLensComponent implements OnInit {
           console.log(stream);
           this.cameraStream = stream;
           this.video.nativeElement.srcObject = stream;
+        }).catch(err => {
+          console.log(err);
+          this.alertService.addAlert(err);
+          this.isCameraDisabled = true;
         });
       }
     })
