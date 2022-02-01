@@ -1,4 +1,8 @@
+:root {
+    --camera-shutter-dimension: 5rem;
+}
 $grow: 36px;
+
 @mixin xs {
     @media (max-width: 359px) {
         @content;
