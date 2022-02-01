@@ -27,3 +27,10 @@
       height: calc(100% - 3rem);
   }
 }
+@include sm {
+    .camera-roll {
+        .top-row {
+            padding: 0 1rem;
+        }
+    }
+}

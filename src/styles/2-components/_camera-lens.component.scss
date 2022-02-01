@@ -91,3 +91,9 @@
 
   }
 }
+@include sm {
+  .camera-lens-container {
+    width: 100vw;
+    height: calc(100vh - 60px);
+  }
+}
