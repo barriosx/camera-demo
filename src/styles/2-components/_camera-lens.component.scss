@@ -1,84 +1,93 @@
+
 .camera-lens-container {
   height: 100vh;
   width: 100vw;
   position: relative;
   .camera-lens {
-      object-fit: cover;
+    object-fit: cover;
   }
-  .camera-shutter {
-    width: 5rem;
-    height: 5rem;
-    background: #86c232;
-    border-radius: 50%;
-    box-shadow: 0 0 20px #000;
-    position: absolute;
-    margin: auto;
-    bottom: 2.5rem;
-    left: calc((100% - 5rem) / 2);
-      &:active {
-          transition: width 0.35s cubic-bezier(0.075, 0.82, 0.165, 1);
-      }
-      &.disabled {
-        background: grey;
-      }
-      .camera-shutter-circle {
-          content: "";
-          border: 10px solid white;
-          border-radius: 50%;
-          width: calc(100% + 36px);
-          height: calc(100% + 36px);
-          left: -18px;
-          top: -18px;
-          box-sizing: border-box;
-          position: absolute;
-          &:active {
+  .camera-options {
+    position: relative;
+    background: rgba(0,0,0,0.3);
+    bottom: calc(var(--camera-shutter-dimension) * 1.5);
+    height: calc(var(--camera-shutter-dimension) * 1.5);
+    width: 100vw;
+    .camera-shutter {
+      width: (var(--camera-shutter-dimension));
+      height: (var(--camera-shutter-dimension));
+      background: #86c232;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #000;
+      position: absolute;
+      margin: auto;
+      top: calc(var(--camera-shutter-dimension) / 4);
+      left: calc((100% - var(--camera-shutter-dimension)) / 2);
+        &:active {
+            transition: width 0.35s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+        &.disabled {
+          background: grey;
+        }
+        .camera-shutter-circle {
+            content: "";
+            border: 5px solid white;
+            border-radius: 50%;
+            width: calc(100% + 18px);
+            height: calc(100% + 18px);
+            left: -9px;
+            top: -9px;
+            box-sizing: border-box;
+            position: absolute;
+            &:active {
+                transform: scale(1.05);
+                transition: transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+            }   
+          @include sm {
+            &:hover, &:focus,&:active {
               transform: scale(1.05);
               transition: transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
-          }   
-        @include sm {
-          &:hover, &:focus,&:active {
-            transform: scale(1.05);
-            transition: transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
-          }   
+            }   
+          }
+          @include xs {
+            &:hover, &:focus, &:active {
+              transform: scale(1.05);
+              transition: transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+            }   
+          }
         }
-        @include xs {
-          &:hover, &:focus, &:active {
-            transform: scale(1.05);
-            transition: transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
-          }   
-        }
+    }
+    .camera-gallery {
+      position: absolute;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      left: 5%;
+      top: calc(var(--camera-shutter-dimension) / 4);
+      width: var(--camera-shutter-dimension);
+      height: var(--camera-shutter-dimension);
+      margin: auto;
+      text-align: center;
+      background: #2a2a2a;
+      img {
+          image-rendering: auto;
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          border-radius: 0.5rem;
       }
-  }
-  .camera-gallery {
-    position: absolute;
-    cursor: pointer;
-    border-radius: 0.5rem;
-    left: 5%;
-    bottom: 2.5rem;
-    width: 5rem;
-    height: 5rem;
-    margin: auto;
-    text-align: center;
-    background: #2a2a2a;
-    img {
-        image-rendering: auto;
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        border-radius: 0.5rem;
+      .gallery-caption {
+          position: absolute;
+          background-image: -webkit-gradient(linear,left bottom,left top,from(rgba(#2a2a2a,.85)),to(transparent));
+          background-image: linear-gradient(0deg,rgba(42,42,42,.85),transparent);
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 50%;
+          width: 100%;
+          font: 1rem "Futura-Bold", sans-serif;
+          text-align: center;
+          color: white;
+      }
     }
-    .gallery-caption {
-        position: absolute;
-        background-image: -webkit-gradient(linear,left bottom,left top,from(rgba(#2a2a2a,.85)),to(transparent));
-        background-image: linear-gradient(0deg,rgba(42,42,42,.85),transparent);
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 50%;
-        width: 100%;
-        font: 1rem "Futura-Bold", sans-serif;
-        text-align: center;
-        color: white;
-    }
+
   }
 }

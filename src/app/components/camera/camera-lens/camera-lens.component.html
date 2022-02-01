@@ -15,16 +15,18 @@
     [width]="cameraWidth"
     hidden
   ></canvas>
-  <div class="camera-gallery" [ngClass]="{'empty': cameraRoll.length < 1}" (click)="goToRoll()">
-    <img 
-    [@photoSaved]="cameraRoll.length" 
-    *ngIf="cameraRoll.length > 0" 
-    [src]="cameraRoll[cameraRoll.length - 1]" alt="image">
-  </div>
-  <div class="camera-shutter"
-    [ngClass]="{'disabled': isCameraDisabled}"
-    (click)="clickPhoto()"
-    >
-    <div class="camera-shutter-circle"></div>
+  <div class="camera-options">
+    <div class="camera-gallery" [ngClass]="{'empty': cameraRoll.length < 1}" (click)="goToRoll()">
+      <img 
+      [@photoSaved]="cameraRoll.length" 
+      *ngIf="cameraRoll.length > 0" 
+      [src]="cameraRoll[cameraRoll.length - 1]" alt="image">
+    </div>
+    <div class="camera-shutter"
+      [ngClass]="{'disabled': isCameraDisabled}"
+      (click)="clickPhoto()"
+      >
+      <div class="camera-shutter-circle"></div>
+    </div>
   </div>
 </div>
