@@ -13,3 +13,8 @@ $grow: 36px;
         @content;
     }
  }
+ @include sm {
+     html {
+        height: -webkit-fill-available;
+     }
+ }

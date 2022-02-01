@@ -88,12 +88,23 @@
           color: white;
       }
     }
-
+    .camera-switch {
+      position: absolute;
+      cursor: pointer;
+      right: 5%;
+      top: calc(var(--camera-shutter-dimension) / 4);
+      width: var(--camera-shutter-dimension);
+      height: var(--camera-shutter-dimension);
+      margin: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
 @include sm {
   .camera-lens-container {
     width: 100vw;
-    height: calc(100vh - 60px);
+    height: -webkit-fill-available;
   }
 }
