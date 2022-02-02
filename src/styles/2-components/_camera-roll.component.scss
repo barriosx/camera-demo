@@ -29,6 +29,14 @@
 }
 @include sm {
     .camera-roll {
+        position: absolute;
+        width: 100%;
+        height: calc(100vh - 3px);
+        top: 0;
+        left: 0;
+        bottom: 0;
+        border-bottom: 3px solid #2a2a2a;
+
         .top-row {
             padding: 0 1rem;
         }

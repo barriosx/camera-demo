@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { from, of } from 'rxjs';
 import { catchError, concatMap, debounceTime, tap } from 'rxjs/operators';
 import { cameraAnimations } from 'src/app/constants/animations';
@@ -10,7 +10,7 @@ import { CameraService } from 'src/app/services/camera/camera.service';
   templateUrl: './camera-lens.component.html',
   animations: cameraAnimations
 })
-export class CameraLensComponent implements OnInit {
+export class CameraLensComponent implements OnInit, AfterViewInit {
   @ViewChild('video', { static: true }) video!: ElementRef;
   @ViewChild('canvas', { static: true }) canvas!: ElementRef;
   cameraRoll: any[] = [];
@@ -27,6 +27,11 @@ export class CameraLensComponent implements OnInit {
   ngOnInit(): void {
     // check getUserMedia is not supported by the browser that has the app open
     this.isCameraSupported = navigator.mediaDevices && (typeof navigator.mediaDevices.getUserMedia === 'function');
+    this.cameraService.cameraRoll$.subscribe(roll => {
+      this.cameraRoll = roll.map(img => img);
+    });
+  }
+  ngAfterViewInit(): void {
     this.cameraService.showCameraRoll$
     .pipe(
       tap((showRoll) => {
@@ -54,9 +59,6 @@ export class CameraLensComponent implements OnInit {
       this.cameraStream = stream;
       this.video.nativeElement.srcObject = stream;
     })
-    this.cameraService.cameraRoll$.subscribe(roll => {
-      this.cameraRoll = roll.map(img => img);
-    });
   }
   getCamera(devices: MediaDeviceInfo[]): Promise<MediaStream | null> {
     console.log(this.showingCamera, this.isCameraDisabled, this.isCameraSupported);
