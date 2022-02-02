@@ -13,24 +13,14 @@ export class CameraService {
   showEnvironment = true;
   constructor() { }
 
-  async getCameraFeed(supported: boolean) {
-    console.log(supported);
-    
-    if (!supported) {
-      // either camera is disabled, feature unsupported, or instance of localstream already exists
-      return null;
-    } else {
-      return this.getCameraDevice(this.showEnvironment);
-    }
-  }
-  async getCameraDevice(showEnvironment: boolean): Promise<MediaStream> {
+  async getCameraDevice(devices: MediaDeviceInfo[]): Promise<MediaStream> {
       // start video stream via MediaDevices API
       const supports = navigator.mediaDevices.getSupportedConstraints(); 
-      const devices = await this.getAllCameraDevices();
+      
       let constraints = undefined;
       console.log('Devices:', devices);
       if (devices.length > 1) {
-        constraints = this.loadSupportedConstraints(supports, showEnvironment)
+        constraints = this.loadSupportedConstraints(supports, this.showEnvironment)
       } else {
         constraints = this.loadSupportedConstraints(supports,false);
       }

@@ -28,18 +28,6 @@ describe('CameraService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-  it('should return null if camera api not supported on the device attempting to consume it', fakeAsync(() => {
-    service.getCameraFeed(false).then(response => {
-      expect(response).toBeNull(); 
-    })
-    tick();
-  }));
-  it('should call camera feed method if supported', fakeAsync(() => {
-    const cameraFeedSpy = spyOn(service, 'getCameraFeed');
-    service.getCameraFeed(true);
-    tick();
-    expect(cameraFeedSpy).toHaveBeenCalled();
-  }));
   it('should return landscape oriention settings if facing user', () => {
     const supports = { }
     expect(service.loadSupportedConstraints(supports, false)).toEqual(landscapeMobileUserConfig);
