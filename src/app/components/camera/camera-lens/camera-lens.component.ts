@@ -26,39 +26,42 @@ export class CameraLensComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     // check getUserMedia is not supported by the browser that has the app open
+    
     this.isCameraSupported = navigator.mediaDevices && (typeof navigator.mediaDevices.getUserMedia === 'function');
     this.cameraService.cameraRoll$.subscribe(roll => {
       this.cameraRoll = roll.map(img => img);
     });
   }
   ngAfterViewInit(): void {
-    this.cameraService.showCameraRoll$
-    .pipe(
-      tap((showRoll) => {
-        this.showingCamera = !showRoll;
-      }),
-      concatMap(() => from(this.cameraService.getAllCameraDevices())),
-      tap((devices) => {
-        this.alertService.addAlert({
-          title: 'Devices:',
-          message: `${devices.length} 
-          ${JSON.stringify(devices)}`
+    navigator.mediaDevices.getUserMedia({audio: false, video: true}).finally(() => {
+      this.cameraService.showCameraRoll$
+      .pipe(
+        tap((showRoll) => {
+          this.showingCamera = !showRoll;
+        }),
+        concatMap(() => from(this.cameraService.getAllCameraDevices())),
+        tap((devices) => {
+          this.alertService.addAlert({
+            title: 'Devices:',
+            message: `${devices.length} 
+            ${JSON.stringify(devices)}`
+          })
+          this.isCameraSwitchingEnabled = devices.length > 1;
+        }),
+        concatMap((devices) => from(this.getCamera(devices))),
+        catchError(err => {
+          console.log(err);
+          this.alertService.addAlert(err);
+          this.isCameraDisabled = true;
+          return of(null)
         })
-        this.isCameraSwitchingEnabled = devices.length > 1;
-      }),
-      concatMap((devices) => from(this.getCamera(devices))),
-      catchError(err => {
-        console.log(err);
-        this.alertService.addAlert(err);
-        this.isCameraDisabled = true;
-        return of(null)
+      )
+      .subscribe(stream => {
+        console.log(stream);
+        this.cameraStream = stream;
+        this.video.nativeElement.srcObject = stream;
       })
-    )
-    .subscribe(stream => {
-      console.log(stream);
-      this.cameraStream = stream;
-      this.video.nativeElement.srcObject = stream;
-    })
+    });
   }
   getCamera(devices: MediaDeviceInfo[]): Promise<MediaStream | null> {
     console.log(this.showingCamera, this.isCameraDisabled, this.isCameraSupported);
