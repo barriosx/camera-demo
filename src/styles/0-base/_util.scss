@@ -13,6 +13,11 @@ $grow: 36px;
         @content;
     }
  }
+ @mixin md {
+    @media (max-width: 769px) {
+        @content;
+    }
+ }
  @include sm {
      html {
         height: -webkit-fill-available;

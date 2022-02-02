@@ -13,8 +13,11 @@ import { AlertService } from 'src/app/services/alert/alert.service';
 export class AlertComponent implements OnInit {
   alert$: Observable<Alert | undefined>;
   constructor(private service: AlertService) { 
-    this.alert$ = this.service.alert$.pipe(filter(alert => !!alert));
+    this.alert$ = this.service.alert$;
   }
 
   ngOnInit(): void { }
+  closeAlert() {
+    this.service.addAlert(undefined);  
+  }
 }

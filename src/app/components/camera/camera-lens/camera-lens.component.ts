@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { from, of } from 'rxjs';
 import { catchError, concatMap, debounceTime, tap } from 'rxjs/operators';
 import { cameraAnimations } from 'src/app/constants/animations';
@@ -10,7 +10,7 @@ import { CameraService } from 'src/app/services/camera/camera.service';
   templateUrl: './camera-lens.component.html',
   animations: cameraAnimations
 })
-export class CameraLensComponent implements OnInit {
+export class CameraLensComponent implements OnInit, AfterViewInit {
   @ViewChild('video', { static: true }) video!: ElementRef;
   @ViewChild('canvas', { static: true }) canvas!: ElementRef;
   cameraRoll: any[] = [];
@@ -26,31 +26,36 @@ export class CameraLensComponent implements OnInit {
 
   ngOnInit(): void {
     // check getUserMedia is not supported by the browser that has the app open
+    
     this.isCameraSupported = navigator.mediaDevices && (typeof navigator.mediaDevices.getUserMedia === 'function');
-    this.cameraService.showCameraRoll$
-    .pipe(
-      tap((showRoll) => {
-        this.showingCamera = !showRoll;
-      }),
-      concatMap(() => from(this.cameraService.getAllCameraDevices())),
-      tap((devices) => {
-        this.isCameraSwitchingEnabled = devices.length > 1;
-      }),
-      concatMap((devices) => from(this.getCamera(devices))),
-      catchError(err => {
-        console.log(err);
-        this.alertService.addAlert(err);
-        this.isCameraDisabled = true;
-        return of(null)
-      })
-    )
-    .subscribe(stream => {
-      console.log(stream);
-      this.cameraStream = stream;
-      this.video.nativeElement.srcObject = stream;
-    })
     this.cameraService.cameraRoll$.subscribe(roll => {
       this.cameraRoll = roll.map(img => img);
+    });
+  }
+  ngAfterViewInit(): void {
+    navigator.mediaDevices.getUserMedia({audio: false, video: true}).finally(() => {
+      this.cameraService.showCameraRoll$
+      .pipe(
+        tap((showRoll) => {
+          this.showingCamera = !showRoll;
+        }),
+        concatMap(() => from(this.cameraService.getAllCameraDevices())),
+        tap((devices) => {
+          this.isCameraSwitchingEnabled = devices.length > 1;
+        }),
+        concatMap((devices) => from(this.getCamera(devices))),
+        catchError(err => {
+          console.log(err);
+          this.alertService.addAlert(err);
+          this.isCameraDisabled = true;
+          return of(null)
+        })
+      )
+      .subscribe(stream => {
+        console.log(stream);
+        this.cameraStream = stream;
+        this.video.nativeElement.srcObject = stream;
+      })
     });
   }
   getCamera(devices: MediaDeviceInfo[]): Promise<MediaStream | null> {

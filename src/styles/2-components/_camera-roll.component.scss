@@ -27,8 +27,16 @@
       height: calc(100% - 3rem);
   }
 }
-@include sm {
+@include md {
     .camera-roll {
+        position: absolute;
+        width: 100%;
+        height: calc(100vh - 70px);
+        top: 0;
+        left: 0;
+        bottom: 0;
+        border-bottom: 3px solid #2a2a2a;
+
         .top-row {
             padding: 0 1rem;
         }

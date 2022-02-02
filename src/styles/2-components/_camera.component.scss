@@ -9,3 +9,11 @@
     position: relative;
   }
 }
+
+@include sm {
+  .camera {
+    .camera-overlay {
+      border-bottom: 1px solid #2a2a2a;
+    }
+  }
+}

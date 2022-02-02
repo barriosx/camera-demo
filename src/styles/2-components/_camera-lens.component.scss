@@ -102,15 +102,14 @@
     }
   }
 }
-@include sm {
+@include md {
   .camera-lens-container {
-    width: 100vw;
-    min-height: -webkit-fill-available;
-    min-height: -moz-available;          /* WebKit-based browsers will ignore this. */
-    min-height: stretch;
+    position: absolute;
+    width: 100%;
+    height: calc(100vh - 70px);
     top: 0;
     left: 0;
-    bottom: 0;
+    border-bottom: 3px solid #2a2a2a;
   }
 }
 @include sm {
