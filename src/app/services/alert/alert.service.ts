@@ -12,10 +12,14 @@ export class AlertService {
   constructor() { }
 
   addAlert(alert: any) {
-    const newAlert = {
-      title: alert.name,
-      message: alert.message
+    if(alert) {
+      const newAlert = {
+        title: alert.name,
+        message: alert.message
+      }
+      this.alert.next(newAlert);
+    } else {
+      this.alert.next(alert);
     }
-    this.alert.next(newAlert);
   }
 }
