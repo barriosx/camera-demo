@@ -10,22 +10,30 @@ export class CameraService {
   private showCameraRoll: BehaviorSubject<boolean> = new BehaviorSubject<boolean> (false);
   cameraRoll$ = this.cameraRoll.asObservable();
   showCameraRoll$ = this.showCameraRoll.asObservable();
-
+  showEnvironment = true;
   constructor() { }
 
   async getCameraFeed(supported: boolean) {
+    console.log(supported);
+    
     if (!supported) {
       // either camera is disabled, feature unsupported, or instance of localstream already exists
       return null;
     } else {
-      return this.getCameraDevice();
+      return this.getCameraDevice(this.showEnvironment);
     }
   }
-  async getCameraDevice(): Promise<MediaStream> {
+  async getCameraDevice(showEnvironment: boolean): Promise<MediaStream> {
       // start video stream via MediaDevices API
       const supports = navigator.mediaDevices.getSupportedConstraints(); 
       const devices = await this.getAllCameraDevices();
-      const constraints = this.loadSupportedConstraints(supports,devices);
+      let constraints = undefined;
+      console.log('Devices:', devices);
+      if (devices.length > 1) {
+        constraints = this.loadSupportedConstraints(supports, showEnvironment)
+      } else {
+        constraints = this.loadSupportedConstraints(supports,false);
+      }
 
       return navigator.mediaDevices.getUserMedia(constraints)
   }
@@ -33,7 +41,7 @@ export class CameraService {
     return navigator.mediaDevices.enumerateDevices()
       .then(devices => devices.filter(device => device.kind === 'videoinput'))
   }
-  loadSupportedConstraints(supports: MediaTrackSupportedConstraints, devices: MediaDeviceInfo[]): MediaStreamConstraints {
+  loadSupportedConstraints(supports: MediaTrackSupportedConstraints, faceEnvironment: boolean): MediaStreamConstraints {
     if (!supports["facingMode"]) {
       // default to user camera
       if (window.innerHeight > window.innerWidth) {
@@ -42,16 +50,15 @@ export class CameraService {
       }
       return landscapeMobileUserConfig;
     } else {
-      const facing = devices.length > 1 ? 'environment' : 'user';
-      switch (facing) {
-        case 'user':
+      switch (faceEnvironment) {
+        case false:
           if (window.innerHeight > window.innerWidth) {
             return facingModeUserPortraitConfig;
           } 
           else {
             return facingModeUserLandscapeConfig;
           }
-        case 'environment':
+        case true:
         default:
           if (window.innerHeight > window.innerWidth) {
             return facingModeEnvironmentPortraitConfig;
@@ -60,7 +67,6 @@ export class CameraService {
             return facingModeEnvironmentLandscapeConfig;
           }
       }
-      
     }
   }
   addPhotoToCameraRoll(imgSrc: any) {
@@ -69,5 +75,8 @@ export class CameraService {
   }
   changeView() {
     this.showCameraRoll.next(!this.showCameraRoll.value);
+  }
+  swapCamera() {
+    this.showEnvironment = !this.showEnvironment;
   }
 }
