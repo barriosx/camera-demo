@@ -7,9 +7,9 @@
     object-fit: cover;
   }
   .camera-options {
-    position: relative;
+    position: absolute;
     background: rgba(0,0,0,0.3);
-    bottom: calc(var(--camera-shutter-dimension) * 1.5);
+    bottom: 0;
     height: calc(var(--camera-shutter-dimension) * 1.5);
     width: 100vw;
     .camera-shutter {
@@ -108,5 +108,8 @@
     min-height: -webkit-fill-available;
     min-height: -moz-available;          /* WebKit-based browsers will ignore this. */
     min-height: stretch;
+    top: 0;
+    left: 0;
+    bottom: 0;
   }
 }
