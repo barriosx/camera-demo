@@ -104,10 +104,9 @@
 }
 @include sm {
   .camera-lens-container {
-    width: 100vw;
-    min-height: -webkit-fill-available;
-    min-height: -moz-available;          /* WebKit-based browsers will ignore this. */
-    min-height: stretch;
+    position: absolute;
+    width: 100%;
+    height: calc(100vh - 3px);
     top: 0;
     left: 0;
     bottom: 0;

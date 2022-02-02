@@ -34,6 +34,11 @@ export class CameraLensComponent implements OnInit {
       }),
       concatMap(() => from(this.cameraService.getAllCameraDevices())),
       tap((devices) => {
+        this.alertService.addAlert({
+          title: 'Devices:',
+          message: `${devices.length} 
+          ${JSON.stringify(devices)}`
+        })
         this.isCameraSwitchingEnabled = devices.length > 1;
       }),
       concatMap((devices) => from(this.getCamera(devices))),
