@@ -28,7 +28,7 @@
       >
       <div class="camera-shutter-circle"></div>
     </div>
-    <div class="camera-switch" (click)="swapCamera()">
+    <div class="camera-switch" (click)="swapCamera()" *ngIf="isCameraSwitchingEnabled">
       <img src="assets/camera-switch.svg">
     </div>
   </div>

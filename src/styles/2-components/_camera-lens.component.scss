@@ -1,7 +1,7 @@
 
 .camera-lens-container {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   position: relative;
   .camera-lens {
     object-fit: cover;
@@ -105,6 +105,8 @@
 @include sm {
   .camera-lens-container {
     width: 100vw;
-    height: -webkit-fill-available;
+    min-height: -webkit-fill-available;
+    min-height: -moz-available;          /* WebKit-based browsers will ignore this. */
+    min-height: stretch;
   }
 }
