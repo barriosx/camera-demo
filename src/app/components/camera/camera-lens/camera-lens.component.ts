@@ -17,6 +17,7 @@ export class CameraLensComponent implements OnInit {
   cameraStream: MediaStream | null = null;
   showingCamera = true;
   isCameraDisabled = false;
+  isCameraSupported = true;
   cameraHeight = 0;
   cameraWidth = 0;
 
@@ -24,25 +25,32 @@ export class CameraLensComponent implements OnInit {
 
   ngOnInit(): void {
     // check getUserMedia is not supported by the browser that has the app open
-    const supported = navigator.mediaDevices && (typeof navigator.mediaDevices.getUserMedia === 'function');
+    this.isCameraSupported = navigator.mediaDevices && (typeof navigator.mediaDevices.getUserMedia === 'function');
     this.cameraService.showCameraRoll$
     .subscribe(showRoll => {
       this.showingCamera = !showRoll;
-      if (!showRoll && !this.isCameraDisabledOrInUse()) {
-        this.cameraService.getCameraFeed(supported).then(stream => {
-          console.log(stream);
-          this.cameraStream = stream;
-          this.video.nativeElement.srcObject = stream;
-        }).catch(err => {
-          console.log(err);
-          this.alertService.addAlert(err);
-          this.isCameraDisabled = true;
-        });
-      }
+      this.getCamera().then(stream => {
+        console.log(stream);
+        this.cameraStream = stream;
+        this.video.nativeElement.srcObject = stream;
+      }).catch(err => {
+        console.log(err);
+        this.alertService.addAlert(err);
+        this.isCameraDisabled = true;
+      });
     })
     this.cameraService.cameraRoll$.subscribe(roll => {
       this.cameraRoll = roll.map(img => img);
     });
+  }
+  getCamera(): Promise<MediaStream | null> {
+    console.log(this.showingCamera, this.isCameraDisabled, this.isCameraSupported);
+    
+    if (this.showingCamera && !this.isCameraDisabledOrInUse()) {
+      return this.cameraService.getCameraFeed(this.isCameraSupported);
+    } else {
+      return Promise.resolve(null);
+    }
   }
   onCameraMetadataLoaded(e: any) {
     console.log(e);
@@ -86,5 +94,26 @@ export class CameraLensComponent implements OnInit {
   }
   isCameraDisabledOrInUse():boolean {
     return this.isCameraDisabled || this.cameraStream != undefined; 
+  }
+  swapCamera() {
+    const track = this.cameraStream?.getVideoTracks();
+    console.log(track);
+    
+    this.cameraService.swapCamera();
+    this.turnOffVideoTracks()
+      .then(() => {
+        this.cameraStream = null;
+        return this.getCamera();
+      })
+      .then(stream => {
+        console.log(stream);
+        this.cameraStream = stream;
+        this.video.nativeElement.srcObject = stream;
+      })
+    .catch(err => {
+      console.log(err);
+      this.alertService.addAlert(err);
+      this.isCameraDisabled = true;
+    });
   }
 }

@@ -42,19 +42,19 @@ describe('CameraService', () => {
   }));
   it('should return landscape oriention settings if facing user', () => {
     const supports = { }
-    expect(service.loadSupportedConstraints(supports, [])).toEqual(landscapeMobileUserConfig);
+    expect(service.loadSupportedConstraints(supports, false)).toEqual(landscapeMobileUserConfig);
   })
   it('should return facing mode landscape oriention settings if facing user', () => {
     const supports = { 
       facingMode: true
     }
-    expect(service.loadSupportedConstraints(supports, [])).toEqual(facingModeUserLandscapeConfig);
+    expect(service.loadSupportedConstraints(supports, false)).toEqual(facingModeUserLandscapeConfig);
   })
   it('should return facing mode environment oriention settings if facing user', () => {
     const supports = { 
       facingMode: true
     }
-    expect(service.loadSupportedConstraints(supports, mockDevices)).toEqual(facingModeEnvironmentLandscapeConfig);
+    expect(service.loadSupportedConstraints(supports, true)).toEqual(facingModeEnvironmentLandscapeConfig);
   })
   it('should add photo to behavior subject', done => {
     service.cameraRoll$
