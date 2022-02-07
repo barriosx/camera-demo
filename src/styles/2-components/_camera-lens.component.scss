@@ -4,7 +4,7 @@
   width: 100%;
   position: relative;
   .camera-lens {
-    object-fit: cover;
+    object-fit: contain;
   }
   .camera-options {
     position: absolute;

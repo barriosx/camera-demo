@@ -1,0 +1,11 @@
+<ng-container *ngIf="($photos | async) as photos; else empty">
+  <img #imageTag [src]="photos[photo]" alt="image" (click)="addTag($event)" (load)="onImageLoad($event)">
+  <div class="tags-overlay">
+    <div class="tag" *ngFor="let tag of tags; let i=index;">
+      <span class="sequence">{{i + 1}}</span>
+    </div>
+  </div>
+</ng-container>
+<ng-template #empty>
+
+</ng-template>

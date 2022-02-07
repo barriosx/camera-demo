@@ -24,17 +24,7 @@ export const portraitMobileUserConfig = {
 
 export const facingModeUserLandscapeConfig = {
   video: {
-    facingMode: { ideal: 'user' },
-    width: {
-      min: 1280,
-      ideal: 1920,
-      max: 2560,
-    },
-    height: {
-      min: 720,
-      ideal: 1080,
-      max: 1440,
-    },
+    facingMode: { ideal: 'user' }
   },
   audio: false,
 }

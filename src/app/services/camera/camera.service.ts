@@ -8,8 +8,11 @@ import { facingModeEnvironmentLandscapeConfig, facingModeEnvironmentPortraitConf
 export class CameraService {
   private cameraRoll = new BehaviorSubject<any[]>([]);
   private showCameraRoll: BehaviorSubject<boolean> = new BehaviorSubject<boolean> (false);
+  private tags = new BehaviorSubject<any[]>([]);
   cameraRoll$ = this.cameraRoll.asObservable();
   showCameraRoll$ = this.showCameraRoll.asObservable();
+  tags$ = this.tags.asObservable();
+
   showEnvironment = true;
   constructor() { }
 
@@ -68,5 +71,8 @@ export class CameraService {
   }
   swapCamera() {
     this.showEnvironment = !this.showEnvironment;
+  }
+  addTagToOurStorage(tagData: { posX: string, posY: string }) {
+    this.tags.next([...this.tags.value, {...tagData}])
   }
 }
