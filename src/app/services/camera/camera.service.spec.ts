@@ -1,6 +1,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { filter } from 'rxjs/operators';
-import { facingModeEnvironmentLandscapeConfig, facingModeUserLandscapeConfig, landscapeMobileUserConfig } from 'src/app/constants/device-configs';
+import { facingModeEnvironmentLandscapeConfig, facingModeEnvironmentPortraitConfig, facingModeUserLandscapeConfig, facingModeUserPortraitConfig, landscapeMobileUserConfig, portraitMobileUserConfig } from 'src/app/constants/device-configs';
 import { CameraService } from './camera.service';
 
 const mockDevices: MediaDeviceInfo[] = [
@@ -30,19 +30,19 @@ describe('CameraService', () => {
   });
   it('should return landscape oriention settings if facing user', () => {
     const supports = { }
-    expect(service.loadSupportedConstraints(supports, false)).toEqual(landscapeMobileUserConfig);
+    expect(service.loadSupportedConstraints(supports, false)).toEqual(portraitMobileUserConfig);
   })
   it('should return facing mode landscape oriention settings if facing user', () => {
     const supports = { 
       facingMode: true
     }
-    expect(service.loadSupportedConstraints(supports, false)).toEqual(facingModeUserLandscapeConfig);
+    expect(service.loadSupportedConstraints(supports, false)).toEqual(facingModeUserPortraitConfig);
   })
   it('should return facing mode environment oriention settings if facing user', () => {
     const supports = { 
       facingMode: true
     }
-    expect(service.loadSupportedConstraints(supports, true)).toEqual(facingModeEnvironmentLandscapeConfig);
+    expect(service.loadSupportedConstraints(supports, true)).toEqual(facingModeEnvironmentPortraitConfig);
   })
   it('should add photo to behavior subject', done => {
     service.cameraRoll$
