@@ -10,7 +10,7 @@ import { TaggingService } from 'src/app/services/tagging/tagging.service';
 export class TaggingComponent implements OnInit {
   @Input() photo!: number;
   $photos;
-  tags: {posyX: string, posyY: string }[] = [];
+  tags: {posX: string, posY: string }[] = [];
   constructor(
     private cameraService: CameraService, 
     private taggingService: TaggingService) { 
@@ -26,6 +26,7 @@ export class TaggingComponent implements OnInit {
   }
   addTag(event: MouseEvent) {
     console.log(event)
+    this.tags.push(this.taggingService.addTag(event))
   }
 
 }
