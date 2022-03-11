@@ -2,11 +2,12 @@
   <ng-container *ngIf="(photos$ | async) as photos;else empty">
     <div class="captured-photo-wrapper">
       <div class="captured-photo" *ngIf="photos.length > 0; else takeSome">
-          <!-- One pane, handle showing one photo at a time -->
-          <img #image 
-              [src]="photos[selectedPhotoIndex]" 
-              alt="image"
-              >
+          <div class="photo-wrapper">
+            <!-- One pane, handle showing one photo at a time -->
+            <app-tagging [photo]="selectedPhotoIndex">
+          </app-tagging>
+          </div>
+          <!-- <img #imageTag [src]="photos[selectedPhotoIndex]" alt="image"> -->
           <div class="carousel-left-btn" *ngIf="photos.length > 1 && (selectedPhotoIndex - 1 > -1)" (click)="selectPhoto(selectedPhotoIndex - 1)"><span>&#10094;</span></div>
           <div class="carousel-right-btn" *ngIf="photos.length > 1 && (selectedPhotoIndex + 1 < photos.length)" (click)="selectPhoto(selectedPhotoIndex + 1)"><span>&#10095;</span></div>
       </div>

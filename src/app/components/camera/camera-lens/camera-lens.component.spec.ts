@@ -33,13 +33,7 @@ describe('CameraLensComponent', () => {
     expect(component.cameraHeight).toBe(100);
     expect(component.cameraWidth).toBe(100);
   });
-  it('should not get camera feed if viewing camera roll', () => {
-    service.changeView();
-    expect(component.showingCamera).toBeFalse();
+  it('should not get camera feed if camera is disabled', () => {
+    expect(component.showingCamera).toBeTrue();
   });
-  it('should call function to show camera roll', fakeAsync(() => {
-    component.goToRoll();
-    tick();
-    expect(component.showingCamera).toBeFalse();
-  }));
 });

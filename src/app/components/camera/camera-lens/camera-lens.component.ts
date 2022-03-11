@@ -15,6 +15,7 @@ export class CameraLensComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef;
   cameraRoll: any[] = [];
   cameraStream: MediaStream | null = null;
+  devices: MediaDeviceInfo[] = [];
   showingCamera = true;
   isCameraDisabled = false;
   isCameraSupported = true;
@@ -33,17 +34,17 @@ export class CameraLensComponent implements OnInit, AfterViewInit {
     });
   }
   ngAfterViewInit(): void {
-    navigator.mediaDevices.getUserMedia({audio: false, video: true}).finally(() => {
+    navigator.mediaDevices.getUserMedia({audio: false, video: true})
+    .then(() => this.cameraService.getAllCameraDevices())
+    .then(devices => {
+      this.isCameraSwitchingEnabled = devices.length > 1;
+      this.devices = devices.map(i => i);
+    })
+    .finally(() => {
       this.cameraService.showCameraRoll$
       .pipe(
-        tap((showRoll) => {
-          this.showingCamera = !showRoll;
-        }),
-        concatMap(() => from(this.cameraService.getAllCameraDevices())),
-        tap((devices) => {
-          this.isCameraSwitchingEnabled = devices.length > 1;
-        }),
-        concatMap((devices) => from(this.getCamera(devices))),
+        tap(showRoll => { this.showingCamera = !showRoll; }),
+        concatMap(() => from(this.getCamera(this.devices))),
         catchError(err => {
           console.log(err);
           this.alertService.addAlert(err);
@@ -59,8 +60,6 @@ export class CameraLensComponent implements OnInit, AfterViewInit {
     });
   }
   getCamera(devices: MediaDeviceInfo[]): Promise<MediaStream | null> {
-    console.log(this.showingCamera, this.isCameraDisabled, this.isCameraSupported);
-    
     if (this.showingCamera && !this.isCameraDisabledOrInUse()) {
       return this.cameraService.getCameraDevice(devices);
     } else {
