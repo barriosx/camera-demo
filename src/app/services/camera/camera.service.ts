@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { facingModeEnvironmentLandscapeConfig, facingModeEnvironmentPortraitConfig, facingModeUserLandscapeConfig, facingModeUserPortraitConfig, landscapeMobileUserConfig, portraitMobileUserConfig } from 'src/app/constants/device-configs';
+import { Tag, Tags } from '../tagging/tagging.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { facingModeEnvironmentLandscapeConfig, facingModeEnvironmentPortraitConf
 export class CameraService {
   private cameraRoll = new BehaviorSubject<any[]>([]);
   private showCameraRoll: BehaviorSubject<boolean> = new BehaviorSubject<boolean> (false);
-  private tags = new BehaviorSubject<any[]>([]);
+  private tags = new BehaviorSubject<Tags[]>([]);
   cameraRoll$ = this.cameraRoll.asObservable();
   showCameraRoll$ = this.showCameraRoll.asObservable();
   tags$ = this.tags.asObservable();
@@ -72,7 +73,26 @@ export class CameraService {
   swapCamera() {
     this.showEnvironment = !this.showEnvironment;
   }
-  addTagToOurStorage(tagData: { posX: string, posY: string }) {
-    this.tags.next([...this.tags.value, {...tagData}])
+  addTagToOurStorage(tagData: Tag, photo: number) {
+    const photoTags = this.tags.value.find(tag => tag.pos === photo);
+    if (!photoTags) {
+      this.tags.next([...this.tags.value, {pos: photo, tags: [{...tagData}] }])
+    } else {
+      // adding to existing list of tags stored
+      const newTags: Tags = {pos: photo, tags: [...photoTags.tags, {...tagData}]};
+      const newList = this.tags.value.map((tag) => (tag.pos === photo ? newTags : tag))
+      this.tags.next(newList);
+    }
+  }
+  updateTagsOfPhoto(tagData: Tag[], photo: number) {
+    const photoTags = this.tags.value.find(tag => tag.pos === photo);
+    if (!photoTags) {
+      // photo doesnt have tags attached
+    } else {
+      // adding to existing list of tags stored
+      const newTags: Tags = {pos: photo, tags: tagData.map(t => t)};
+      const newList = this.tags.value.map((tag) => (tag.pos === photo ? newTags : tag))
+      this.tags.next(newList);
+    }
   }
 }
