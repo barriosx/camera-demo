@@ -3,6 +3,7 @@
   <div class="tags-overlay">
     <div class="tag" *ngFor="let tag of tags; let i=index;"
       [ngStyle]="{'left': tag.posX, 'top': tag.posY}"
+      (click)="removeTag(photo, i)"
     >
       <span class="sequence">{{i + 1}}</span>
     </div>
